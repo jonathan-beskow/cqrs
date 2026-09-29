@@ -1,4 +1,4 @@
-package br.com.boutique.aoi;
+package br.com.boutique.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  postgres-beautique:
+    image: postgres:17
+    hostname: postgres-beautique
+    environment:
+      POSTGRES_DB: beautique
+      POSTGRES_USER: beautique
+      POSTGRES_PASSWORD: beautique
+    volumes:
+      - 'D:/db-beautique:/var/lib/postgresql/data'
+      - './init-beautique-schema.sql:/docker-entrypoint-initdb.d/init-beautique-schema.sql'
+    ports:
+      - '3334:5432'
+    networks:
+      - beautique-network
+
+networks:
+  beautique-network:
+    driver: bridge
