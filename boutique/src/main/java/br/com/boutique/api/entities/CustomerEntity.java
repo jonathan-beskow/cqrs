@@ -21,6 +21,9 @@ public class CustomerEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String phone;
 
+    @Column(nullable = false, length = 100)
+    private String email;
+
     @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
