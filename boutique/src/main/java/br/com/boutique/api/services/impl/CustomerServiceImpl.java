@@ -8,6 +8,8 @@ import br.com.boutique.api.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -24,5 +26,27 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerEntity savedEntity = customerRepository.save(entity);
 
         return convertUtil.convertToTarget(savedEntity);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Optional<CustomerEntity> customer = customerRepository.findById(id);
+        if (!customer.isPresent()) {
+            throw new RuntimeException("Customer not found");
+        }
+        customerRepository.delete(customer.get());
+    }
+
+    @Override
+    public CustomerDTO update(CustomerDTO customerDTO) {
+        Optional<CustomerEntity> customer = customerRepository.findById(customerDTO.getId());
+        if (!customer.isPresent()) {
+            throw new RuntimeException("Customer not found");
+        }
+
+        CustomerEntity customerEntity = convertUtil.convertToSource(customerDTO);
+        customerEntity.setAppointments(customer.get().getAppointments());
+        customerEntity.setCreatedAt(customer.get().getCreatedAt());
+        return convertUtil.convertToTarget(customerRepository.save(customerEntity));
     }
 }
