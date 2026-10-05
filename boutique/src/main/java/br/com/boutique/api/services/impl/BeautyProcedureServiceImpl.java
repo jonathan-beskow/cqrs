@@ -33,4 +33,17 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
         }
         beautyProcedureRepository.deleteById(id);
     }
+
+    @Override
+    public BeautyProcedureDTO update(BeautyProcedureDTO beautyProcedureDTO) {
+        Optional<BeautyProceduresEntity> beautyProceduresEntityOptional = beautyProcedureRepository.findById(beautyProcedureDTO.getId());
+        if (beautyProceduresEntityOptional.isEmpty()) {
+            throw new RuntimeException("Beauty Procedure not found");
+        }
+        BeautyProceduresEntity beautyProceduresEntity = convertUtil.convertToSource(beautyProcedureDTO);
+        beautyProceduresEntity.setAppointments(beautyProceduresEntityOptional.get().getAppointments());
+        beautyProceduresEntity.setCreatedAt(beautyProceduresEntityOptional.get().getCreatedAt());
+
+        return convertUtil.convertToTarget(beautyProceduresEntity);
+    }
 }

@@ -8,4 +8,6 @@ public interface BeautyProcedureService {
 
     void deleteProcedure(Long id);
 
+    BeautyProcedureDTO update(BeautyProcedureDTO beautyProcedureDTO);
+
 }

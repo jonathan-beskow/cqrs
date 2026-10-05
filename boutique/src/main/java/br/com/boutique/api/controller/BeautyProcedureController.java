@@ -23,4 +23,9 @@ public class BeautyProcedureController {
         beautyProcedureService.deleteProcedure(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping
+    public ResponseEntity<BeautyProcedureDTO> update(@RequestBody BeautyProcedureDTO beautyProcedureDTO) {
+        return ResponseEntity.ok(beautyProcedureService.update(beautyProcedureDTO));
+    }
 }
