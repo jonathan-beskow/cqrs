@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres-beautique:
@@ -9,12 +9,26 @@ services:
       POSTGRES_USER: beautique
       POSTGRES_PASSWORD: beautique
     volumes:
-      - 'D:/db-beautique:/var/lib/postgresql/data'
-      - './init-beautique-schema.sql:/docker-entrypoint-initdb.d/init-beautique-schema.sql'
+      - "D:/db-beautique:/var/lib/postgresql/data"
+      - "./init-beautique-schema.sql:/docker-entrypoint-initdb.d/init-beautique-schema.sql"
     ports:
-      - '3334:5432'
+      - "3334:5432"
     networks:
       - beautique-network
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - beautique-network
+    volumes:
+      - "D:/rabbitmq-data:/var/lib/rabbitmq"
+      - "D:/rabbitmq-log:/var/lib/rabbitmq"
 
 networks:
   beautique-network:

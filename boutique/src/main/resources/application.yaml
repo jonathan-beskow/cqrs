@@ -2,6 +2,12 @@ spring:
   application:
     name: boutique
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+
   datasource:
     url: jdbc:postgresql://localhost:3334/beautique
     username: beautique
