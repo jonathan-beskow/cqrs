@@ -1,6 +1,7 @@
 package br.com.boutique.api.configuration;
 
 import lombok.Getter;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -31,4 +32,30 @@ public class RabbitMQTopicConfig {
                 .to(exchange)
                 .with("customer.#");
     }
+
+    @Bean
+    public Queue beautyProcedureQueue() {
+        return new Queue("beautyProcedureQueue", true);
+    }
+
+    @Bean
+    public Binding bindingBeautyProcedures(Queue beautyProcedureQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(beautyProcedureQueue).to(exchange).with("beautyProcedures.#");
+    }
+
+    @Bean
+    public Queue appointmentQueue() {
+        return new Queue("appointmentQueue", true);
+    }
+
+    @Bean
+    public Binding bindingAppointment(Queue appointmentQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(appointmentQueue).to(exchange).with("appointments.#");
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
 }

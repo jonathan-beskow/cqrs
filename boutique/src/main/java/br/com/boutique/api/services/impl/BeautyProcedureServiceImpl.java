@@ -4,6 +4,7 @@ import br.com.boutique.api.dto.BeautyProcedureDTO;
 import br.com.boutique.api.entities.BeautyProceduresEntity;
 import br.com.boutique.api.repositories.BeautyProcedureRepository;
 import br.com.boutique.api.services.BeautyProcedureService;
+import br.com.boutique.api.services.BrokerService;
 import br.com.boutique.api.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class BeautyProcedureServiceImpl implements BeautyProcedureService {
 
     private final BeautyProcedureRepository beautyProcedureRepository;
+    private final BrokerService brokerService;
 
     private final ConvertUtil<BeautyProceduresEntity, BeautyProcedureDTO> convertUtil = new ConvertUtil<>(BeautyProceduresEntity.class, BeautyProcedureDTO.class);
 
@@ -22,6 +24,7 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
     public BeautyProcedureDTO create(BeautyProcedureDTO beautyProcedureDTO) {
         BeautyProceduresEntity beautyProceduresEntity = convertUtil.convertToSource(beautyProcedureDTO);
         BeautyProceduresEntity newBeautyProcedure = beautyProcedureRepository.save(beautyProceduresEntity);
+        sendBeautyProceduresToQueue(newBeautyProcedure);
         return convertUtil.convertToTarget(newBeautyProcedure);
     }
 
@@ -43,7 +46,22 @@ public class BeautyProcedureServiceImpl implements BeautyProcedureService {
         BeautyProceduresEntity beautyProceduresEntity = convertUtil.convertToSource(beautyProcedureDTO);
         beautyProceduresEntity.setAppointments(beautyProceduresEntityOptional.get().getAppointments());
         beautyProceduresEntity.setCreatedAt(beautyProceduresEntityOptional.get().getCreatedAt());
+        BeautyProceduresEntity updatedBeautyProcedureEntity = beautyProcedureRepository.save(beautyProceduresEntity);
 
-        return convertUtil.convertToTarget(beautyProceduresEntity);
+        sendBeautyProceduresToQueue(updatedBeautyProcedureEntity);
+
+        return convertUtil.convertToTarget(updatedBeautyProcedureEntity);
     }
+
+    private void sendBeautyProceduresToQueue(BeautyProceduresEntity beautyProceduresEntity) {
+        BeautyProcedureDTO beautyProcedureDTO = BeautyProcedureDTO.builder()
+                .id(beautyProceduresEntity.getId())
+                .name(beautyProceduresEntity.getName())
+                .description(beautyProceduresEntity.getDescription())
+                .price(beautyProceduresEntity.getPrice())
+                .build();
+
+        brokerService.send("beautyProcedures", beautyProcedureDTO);
+    }
+
 }
