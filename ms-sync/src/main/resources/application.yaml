@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ms-sync
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+  data:
+    mongodb:
+      database: ms-beautique-query
+      host: localhost
+      port: 27017
+      username: ms-sync
+      password: ms-sync
+
+server:
+  servlet:
+    context-path: /ms-sync
+  port: 8083
