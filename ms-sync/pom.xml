@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version> <!-- ✅ versão estável recomendada -->
+        <version>3.4.4</version>
         <relativePath/>
     </parent>
 
@@ -18,44 +18,46 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <java.version>21</java.version> <!-- ✅ LTS mais recente e estável -->
+        <java.version>25</java.version> <!-- Alterado para Java 25 -->
+        <lombok.version>1.18.48</lombok.version>
     </properties>
 
     <dependencies>
 
-        <!-- ✅ AMQP / RabbitMQ -->
+        <!-- AMQP / RabbitMQ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-        <!-- ✅ MongoDB -->
+        <!-- MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
-        <!-- ✅ Web MVC -->
+        <!-- Web MVC -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- ✅ Lombok -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
 
-        <!-- ✅ Testes -->
+        <!-- Testes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- ✅ Teste de integração AMQP -->
+        <!-- Teste de integração AMQP -->
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit-test</artifactId>
@@ -69,14 +71,12 @@
             <version>3.2.4</version>
         </dependency>
 
-
-
     </dependencies>
 
     <build>
         <plugins>
 
-            <!-- ✅ Plugin Spring Boot -->
+            <!-- Plugin Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -90,15 +90,19 @@
                 </configuration>
             </plugin>
 
-            <!-- ✅ Compiler com Lombok -->
+            <!-- Compiler atualizado para o Java 25 e Lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- Versão atualizada do plugin -->
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
