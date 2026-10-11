@@ -49,7 +49,9 @@ public class ListenerConfigImpl implements ListenerConfig {
     public void listenToBeautyProcedureQueue(String message) {
         try {
             BeautyProcedureDTO beautyProcedure = objectMapper.readValue(message, BeautyProcedureDTO.class);
+
             log.info("Message received from beautyQueue: {}", beautyProcedure.toString());
+
         } catch (JsonProcessingException e) {
             log.error(ErrorWhileProcessingData);
         }
