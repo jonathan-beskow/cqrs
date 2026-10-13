@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postgres-beautique:
     image: postgres:17
@@ -17,25 +15,38 @@ services:
       - beautique-network
 
   rabbitmq:
-      image: "rabbitmq:3-management"
-      hostname: rabbitmq
-      environment:
-        RABBITMQ_DEFAULT_USER: user
-        RABBITMQ_DEFAULT_PASS: password
-      ports:
-        - "5673:5672"   # AMQP na porta 5673
-        - "15673:15672" # Painel na porta 15673
-      networks:
-        - beautique-network
-      volumes:
-        - rabbitmq-data:/var/lib/rabbitmq
-        - rabbitmq-log:/var/log/rabbitmq
+    image: "rabbitmq:3-management"
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      - beautique-network
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+
+  mongodb:
+    image: "mongo:latest"
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: mongopassword
+    volumes:
+      - "D:/db-mongo:/data/db"
+      - "./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh"
+    ports:
+      - "27017:27017"
+    networks:
+      - beautique-network
 
 networks:
   beautique-network:
     driver: bridge
 
-# Aqui dizemos para o Docker gerenciar essas pastas internamente
 volumes:
   rabbitmq-data:
   rabbitmq-log:
