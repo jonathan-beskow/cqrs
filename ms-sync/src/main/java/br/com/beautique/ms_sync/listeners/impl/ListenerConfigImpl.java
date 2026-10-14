@@ -4,6 +4,7 @@ import br.com.beautique.ms_sync.dto.appointments.FullAppointmentDTO;
 import br.com.beautique.ms_sync.dto.beautyProcedures.BeautyProcedureDTO;
 import br.com.beautique.ms_sync.dto.customers.CustomerDTO;
 import br.com.beautique.ms_sync.listeners.ListenerConfig;
+import br.com.beautique.ms_sync.service.SyncService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,14 @@ public class ListenerConfigImpl implements ListenerConfig {
 
     private final ObjectMapper objectMapper;
     private final String ErrorWhileProcessingData = "rror processing data";
+    private final SyncService syncService;
 
     @RabbitListener(queues = "customerQueue")
     @Override
     public void listenToCustomerQueue(String message) {
         try {
             CustomerDTO customer = objectMapper.readValue(message, CustomerDTO.class);
-            //sync data here
+            syncService.syncCustomer(customer);
             log.info("Message received from customerQueue: {}", customer.toString());
         } catch (JsonProcessingException e) {
             log.error(ErrorWhileProcessingData);
@@ -38,6 +40,7 @@ public class ListenerConfigImpl implements ListenerConfig {
     public void listenToAppointmentQueue(String message) {
         try {
             FullAppointmentDTO appointment = objectMapper.readValue(message, FullAppointmentDTO.class);
+            syncService.syncAppointment(appointment);
             log.info("Message received from appointmentQueue: {}", appointment.toString());
         } catch (JsonProcessingException e) {
             log.error(ErrorWhileProcessingData);
@@ -49,6 +52,7 @@ public class ListenerConfigImpl implements ListenerConfig {
     public void listenToBeautyProcedureQueue(String message) {
         try {
             BeautyProcedureDTO beautyProcedure = objectMapper.readValue(message, BeautyProcedureDTO.class);
+            syncService.syncBeautyProcedures(beautyProcedure);
             log.info("Message received from beautyQueue: {}", beautyProcedure.toString());
         } catch (JsonProcessingException e) {
             log.error(ErrorWhileProcessingData);

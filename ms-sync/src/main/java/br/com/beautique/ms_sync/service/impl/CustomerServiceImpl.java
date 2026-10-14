@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -17,7 +19,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void saveCustomer(CustomerDTO customer) {
         try {
-            log.info("Saving customer: {}" );
+            log.info("Saving customer: {}", customer.getId());
+            customerRepository.save(customer);
+        } catch (Exception e) {
+            log.error("Error saving customer: {}", e.getMessage());
+            log.trace(Arrays.toString(e.getStackTrace()));
         }
     }
 }
